@@ -1,32 +1,26 @@
 import java.util.Scanner;
 
-public class SHA1 {
-    // Constants for SHA-1
+public class SHA {
     private static final int H0 = 0x67452301;
     private static final int H1 = 0xEFCDAB89;
     private static final int H2 = 0x98BADCFE;
     private static final int H3 = 0x10325476;
     private static final int H4 = 0xC3D2E1F0;
 
-    // Left rotate function (circular left shift)
-    private static int leftRotate(int value, int shift) {
+    private static int leftRotate(int value, int shift)
+    {
         return (value << shift) | (value >>> (32 - shift));
     }
 
-    // Function to pad the input
     private static byte[] padMessage(byte[] message) {
         int originalLength = message.length;
         long originalLengthBits = (long) originalLength * 8;
-        // Add 1 byte for the '1' bit, and enough bytes for padding + 8 bytes for length
         int paddingLength = (56 - (originalLength + 1) % 64 + 64) % 64;
         byte[] paddedMessage = new byte[originalLength + paddingLength + 9];
-        
-        // Copy original message
+
         System.arraycopy(message, 0, paddedMessage, 0, originalLength);
-        // Add the single '1' bit
         paddedMessage[originalLength] = (byte) 0x80;
-        
-        // Append the original length in bits as a 64-bit big-endian integer
+
         for (int i = 0; i < 8; i++) {
             paddedMessage[paddedMessage.length - 1 - i] = (byte) (originalLengthBits >>> (i * 8));
         }
@@ -35,34 +29,28 @@ public class SHA1 {
 
     public static void main(String[] args) {
         Scanner scanner = new Scanner(System.in);
-        
-        // Get input text from the user
+
         System.out.print("Enter the text to hash: ");
         String inputText = scanner.nextLine();
-        
-        // Pad the input message
+
         byte[] paddedMessage = padMessage(inputText.getBytes());
-        
-        // Ask for round number and step number
+
         System.out.print("Enter the round number (1-4): ");
         int round = scanner.nextInt();
         System.out.print("Enter the step number (1-79): ");
         int step = scanner.nextInt();
-        
-        // Ensure valid round and step numbers
+
         if (round < 1 || round > 4 || step < 0 || step > 79) {
             System.out.println("Invalid round or step number. Please enter valid values.");
             return ;
         }
-        
-        // Message schedule array
+
         int[] w = new int[80];
-        
-        // Process block for just one step
+
         for (int i = 0; i < 16; i++) {
-            w[i] = ((paddedMessage[i * 4] & 0xFF) << 24) | 
+            w[i] = ((paddedMessage[i * 4] & 0xFF) << 24) |
                     ((paddedMessage[i * 4 + 1] & 0xFF) << 16) |
-                    ((paddedMessage[i * 4 + 2] & 0xFF) << 8) | 
+                    ((paddedMessage[i * 4 + 2] & 0xFF) << 8) |
                     (paddedMessage[i * 4 + 3] & 0xFF);
         }
 
@@ -90,7 +78,6 @@ public class SHA1 {
             k = 0xCA62C1D6;
         }
 
-        // Perform the specific step (for the given step in the block)
         int temp = leftRotate(a, 5) + f + e + k + w[step];
         e = d;
         d = c;

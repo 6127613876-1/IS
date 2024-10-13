@@ -14,7 +14,7 @@ public class Attacker {
         System.out.println("Attacker Is Waiting To Interupt A Exchange Between UserA And UserB...");
         Socket socketA=ssA.accept();
         Socket socketB=ssB.accept();
-        System.out.println("Attacker Succesffuly interupted UserA And UserB.");
+        System.out.println("Attacker Successfully interrupted UserA And UserB.");
         BufferedReader inA=new BufferedReader(new InputStreamReader(socketA.getInputStream()));
         PrintWriter outA=new PrintWriter(socketA.getOutputStream(),true);
         BufferedReader inB=new BufferedReader(new InputStreamReader(socketB.getInputStream()));
